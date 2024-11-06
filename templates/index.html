@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+</head>
+
+<body>
+    <h1>Sentiment Analysis Prediction</h1>
+    <form id="prediction-form">
+        <label for="statement">Enter a statement:</label>
+        <input type="text" id="statement" name="statement" required>
+        <button type="submit">Predict</button>
+    </form>
+    <h2>Prediction:</h2>
+    <p id="prediction-result">Waiting for input...</p>
+    <p id="prediction-confidence"></p>
+
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            document.getElementById("prediction-result").textContent = "Predicting Text Sentiment..."
+            document.getElementById("prediction-confidence").textContent = ""
+            const statement = document.getElementById("statement").value;
+            const response = await fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ statement })
+            });
+            const result = await response.json();
+            document.getElementById("prediction-result").textContent = "Sentiment : " + result.prediction;
+            document.getElementById("prediction-confidence").textContent = "Confidence : " + result.confidence;
+        });
+    </script>
+</body>
+
+</html>
